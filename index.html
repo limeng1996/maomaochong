@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>移动咖啡车</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #FAFAF9; color: #1C1917; -webkit-tap-highlight-color: transparent; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -19,12 +18,9 @@
 <body class="antialiased max-w-md mx-auto min-h-screen relative bg-stone-50 shadow-2xl overflow-hidden">
     <div id="app" class="h-screen overflow-y-auto pb-20 hide-scrollbar">
 
-        <!-- 连接状态条 -->
-        <div id="conn-status" class="fixed top-0 left-0 right-0 z-50 text-center text-xs py-1 bg-stone-200 text-stone-500 transition-all">正在连接...</div>
-
         <!-- 菜单页 -->
-        <div id="view-menu" class="view-section fade-in pt-6">
-            <div class="px-6 pt-6 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
+        <div id="view-menu" class="view-section fade-in">
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
                 <div class="mb-4">
                     <h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight">移动咖啡车</h1>
                     <p id="shop-notice" class="text-xs text-stone-500 mt-1">新鲜烘焙 · 现场制作</p>
@@ -149,11 +145,12 @@
 
     <script>
         // ==================== 配置：建议修改为您的专属频道 ====================
-        const MQTT_BROKER = 'wss://broker.emqx.io:8084/mqtt';
-        const TOPIC_PREFIX = 'coffee/limeng1996/maomaochong'; // 改成您自己的唯一标识，防止和别人冲突
+        const NTFY_TOPIC = 'coffee-limeng1996-maomaochong-orders';
+        const NTFY_CONFIG_TOPIC = 'coffee-limeng1996-maomaochong-config';
         // ===================================================================
 
-        let mqttClient = null;
+        const NTFY_URL = 'https://ntfy.sh';
+
         let shopConfig = {};
         let cart = [];
         let selectedProduct = null;
@@ -178,45 +175,25 @@
             { id: 10, name: '气泡美式', en: 'Sparkling Americano', price: 24, category: 'special', emoji: '🫧', options: [{name: '口味', choices:['原味','柠檬 +¥2']}] }
         ];
 
-        function initMqtt() {
-            const statusEl = document.getElementById('conn-status');
-            mqttClient = mqtt.connect(MQTT_BROKER, {
-                clientId: 'coffee_c_' + Math.random().toString(36).substr(2, 8),
-                clean: true, connectTimeout: 5000, reconnectPeriod: 3000
-            });
-
-            mqttClient.on('connect', () => {
-                statusEl.textContent = '已连接';
-                statusEl.className = 'fixed top-0 left-0 right-0 z-50 text-center text-xs py-1 bg-green-100 text-green-700 transition-all';
-                mqttClient.subscribe(TOPIC_PREFIX + '/config');
-                setTimeout(() => statusEl.style.opacity = '0', 2000);
-            });
-
-            mqttClient.on('message', (topic, message) => {
+        function loadConfig() {
+            fetch(`${NTFY_URL}/${NTFY_CONFIG_TOPIC}/json?poll=1`).then(r => r.json()).then(data => {
                 try {
-                    const data = JSON.parse(message.toString());
-                    if (topic === TOPIC_PREFIX + '/config') {
-                        shopConfig = data;
-                        document.getElementById('shop-name').textContent = data.shopName || '移动咖啡车';
-                        document.getElementById('shop-notice').textContent = data.shopNotice || '新鲜烘焙 · 现场制作';
-                        if (data.wechatQrcode) {
-                            document.getElementById('wechat-img').src = data.wechatQrcode;
-                            document.getElementById('wechat-img').classList.remove('hidden');
-                            document.getElementById('wechat-ph').classList.add('hidden');
-                        }
-                        if (data.alipayQrcode) {
-                            document.getElementById('alipay-img').src = data.alipayQrcode;
-                            document.getElementById('alipay-img').classList.remove('hidden');
-                            document.getElementById('alipay-ph').classList.add('hidden');
-                        }
+                    const cfg = JSON.parse(data.message);
+                    shopConfig = cfg;
+                    document.getElementById('shop-name').textContent = cfg.shopName || '移动咖啡车';
+                    document.getElementById('shop-notice').textContent = cfg.shopNotice || '新鲜烘焙 · 现场制作';
+                    if (cfg.wechatQrcode) {
+                        document.getElementById('wechat-img').src = cfg.wechatQrcode;
+                        document.getElementById('wechat-img').classList.remove('hidden');
+                        document.getElementById('wechat-ph').classList.add('hidden');
                     }
-                } catch (e) {}
-            });
-
-            mqttClient.on('error', () => {
-                statusEl.textContent = '连接失败，正在重试...';
-                statusEl.className = 'fixed top-0 left-0 right-0 z-50 text-center text-xs py-1 bg-red-100 text-red-700 transition-all';
-            });
+                    if (cfg.alipayQrcode) {
+                        document.getElementById('alipay-img').src = cfg.alipayQrcode;
+                        document.getElementById('alipay-img').classList.remove('hidden');
+                        document.getElementById('alipay-ph').classList.add('hidden');
+                    }
+                } catch(e) {}
+            }).catch(() => {});
         }
 
         function showView(id) {
@@ -328,15 +305,24 @@
             toggleCart(); showView('view-pay');
         }
 
-        function completeOrder() {
-            if (!mqttClient || !mqttClient.connected) { alert('网络未连接，请检查网络后重试'); return; }
+        async function completeOrder() {
             const total = cart.reduce((s, i) => s + i.unitPrice * i.qty, 0);
             const num = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
             const order = {
                 num, items: cart.map(i => ({ name: i.name, emoji: i.emoji, qty: i.qty, unitPrice: i.unitPrice, optionsText: i.optionsText })),
                 total, time: new Date().toLocaleString('zh-CN', {hour:'2-digit', minute:'2-digit'}), timestamp: Date.now()
             };
-            mqttClient.publish(TOPIC_PREFIX + '/orders', JSON.stringify(order));
+            
+            try {
+                await fetch(`${NTFY_URL}/${NTFY_TOPIC}`, {
+                    method: 'POST',
+                    body: JSON.stringify(order),
+                    headers: { 'Title': `新订单 #${num} ¥${total}` }
+                });
+            } catch(e) {
+                alert('网络异常，订单未发出，请检查网络后重试');
+                return;
+            }
             
             let myOrders = JSON.parse(localStorage.getItem('coffee_my_orders') || '[]');
             myOrders.unshift(order);
@@ -370,13 +356,4 @@
                     <div class="border-t border-stone-100 pt-3 flex justify-between items-center">
                         <span class="text-sm text-stone-500">共 ${o.items.reduce((s,i)=>s+i.qty,0)} 件</span>
                         <span class="font-bold text-stone-800">合计 ¥${o.total}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        initMqtt();
-        renderCategories(); renderMenu(); updateCartUI();
-    </script>
-</body>
-</html>
+                   
