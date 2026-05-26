@@ -1,370 +1,353 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; -webkit-text-stroke: #000000; min-height: 13.0px}
-    span.s1 {font-kerning: none; font-variant-ligatures: common-ligatures}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>移动咖啡车</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #FAFAF9; color: #1C1917; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .press-scale:active { transform: scale(0.96); }
+    </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="zh-CN"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;移动咖啡车&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #FAFAF9; color: #1C1917; -webkit-tap-highlight-color: transparent; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.hide-scrollbar::-webkit-scrollbar { display: none; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.fade-in { animation: fadeIn 0.3s ease-out; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.slide-up { animation: slideUp 0.3s ease-out; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.press-scale:active { transform: scale(0.96); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body class="antialiased max-w-md mx-auto min-h-screen relative bg-stone-50 shadow-2xl overflow-hidden"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="app" class="h-screen overflow-y-auto pb-20 hide-scrollbar"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-menu" class="view-section fade-in"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mb-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight"&gt;移动咖啡车&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p id="shop-notice" class="text-xs text-stone-500 mt-1"&gt;新鲜烘焙 · 现场制作&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex space-x-3 overflow-x-auto hide-scrollbar" id="category-tabs"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-4 py-4 space-y-3" id="menu-list"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-pay" class="view-section hidden fade-in bg-stone-100 min-h-screen"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white px-6 pt-8 pb-6 text-center relative"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="showView('view-menu')" class="absolute left-4 top-8 p-2 text-stone-500 press-scale rounded-full"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-xl font-bold text-stone-800"&gt;向商家付款&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mt-6 mb-2"&gt;&lt;span class="text-4xl font-bold text-stone-800" id="pay-amount"&gt;¥0&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p class="text-stone-500 text-sm"&gt;请使用微信或支付宝扫描下方二维码&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 py-8 space-y-6"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-6 text-center shadow-sm"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;img id="wechat-img" class="w-full h-full object-cover hidden" /&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div id="wechat-ph" class="text-stone-400 text-sm"&gt;加载中...&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="font-medium text-stone-700"&gt;微信收款码&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-6 text-center shadow-sm"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;img id="alipay-img" class="w-full h-full object-cover hidden" /&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div id="alipay-ph" class="text-stone-400 text-sm"&gt;加载中...&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="font-medium text-stone-700"&gt;支付宝收款码&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="completeOrder()" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium text-lg press-scale transition-transform"&gt;我已完成付款&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-done" class="view-section hidden fade-in bg-stone-100 min-h-screen"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white px-6 pt-8 pb-6 text-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-xl font-bold text-stone-800"&gt;订单已提交&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p class="text-stone-500 text-sm mt-1"&gt;商家已收到，请留意叫号&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 py-4 space-y-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-8 text-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="text-sm text-amber-700 mb-2 font-medium tracking-widest"&gt;取 餐 号&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="text-7xl font-black text-amber-800 tracking-wider" id="done-num"&gt;000&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm" id="done-details"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="showView('view-menu'); clearCartLocal();" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium press-scale transition-transform"&gt;完成，返回继续点单&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-orders" class="view-section hidden fade-in"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-2xl font-bold text-stone-800"&gt;当前订单&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p class="text-xs text-stone-400 mt-1"&gt;仅本设备可见&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-4 py-4 space-y-3" id="orders-list"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="cart-modal" class="fixed inset-0 bg-black/40 z-40 hidden flex flex-col justify-end" onclick="if(event.target===this)toggleCart()"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-t-3xl max-h-[70vh] flex flex-col slide-up" onclick="event.stopPropagation()"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center p-5 border-b border-stone-100"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-lg text-stone-800"&gt;已选商品&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onclick="clearCart()" class="text-stone-400 text-sm flex items-center gap-1 press-scale"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"&gt;&lt;/path&gt;&lt;/svg&gt;清空</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="overflow-y-auto p-5 space-y-4 flex-1" id="cart-items"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="p-5 border-t border-stone-100 bg-stone-50 rounded-t-3xl"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between text-sm text-stone-500 mb-3"&gt;&lt;span&gt;商品小计&lt;/span&gt;&lt;span id="cart-subtotal"&gt;¥0&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onclick="goToPay()" class="w-full py-3.5 bg-stone-800 text-white rounded-2xl font-medium text-lg press-scale transition-transform"&gt;去支付 &lt;span id="cart-total-btn"&gt;¥0&lt;/span&gt;&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="option-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex flex-col justify-end"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-t-3xl p-6 slide-up max-h-[80vh] overflow-y-auto"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-start mb-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;&lt;h3 id="opt-name" class="text-xl font-bold text-stone-800"&gt;&lt;/h3&gt;&lt;p id="opt-price" class="text-lg font-semibold text-stone-600 mt-1"&gt;&lt;/p&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onclick="closeOpt()" class="p-2 bg-stone-100 rounded-full text-stone-500 press-scale"&gt;&lt;svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-4" id="opt-groups"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center bg-stone-100 rounded-full"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="changeQty(-1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg press-scale"&gt;−&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span id="opt-qty" class="w-8 text-center font-medium"&gt;1&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="changeQty(1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg press-scale"&gt;+&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onclick="addToCart()" class="px-8 py-3 bg-stone-800 text-white rounded-full font-medium press-scale transition-transform"&gt;加入购物车&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-100 px-6 py-3 flex justify-around items-center z-30 max-w-md mx-auto"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="showView('view-menu')" class="nav-btn flex flex-col items-center gap-1 text-stone-800" data-view="view-menu"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span class="text-[10px] font-medium"&gt;点单&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="showView('view-orders')" class="nav-btn flex flex-col items-center gap-1 text-stone-400" data-view="view-orders"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span class="text-[10px] font-medium"&gt;当前订单&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button onclick="toggleCart()" id="cart-fab" class="fixed bottom-20 right-4 w-14 h-14 bg-stone-800 text-white rounded-full shadow-lg flex items-center justify-center z-30 press-scale transition-transform hidden"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="relative"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span id="cart-badge" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold"&gt;0&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const SUPABASE_URL = 'https://woasvhpfiytpkqzsekkz.supabase.co';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const SUPABASE_KEY = 'sb_publishable_oILP3NdbrOII7b_W3U4JpA_nYGEh...'; // 从 Supabase 控制台 API Keys 页面复制完整的 Publishable key</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let supabase = null;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (!SUPABASE_KEY.includes('...')) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let shopConfig = {};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let cart = [];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let selectedProduct = null;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let optionQty = 1;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let selectedOptions = {};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let currentCategory = 'all';</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const categories = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'all', name: '全部' }, { id: 'espresso', name: '意式经典' }, { id: 'special', name: '创意特调' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'nocaffeine', name: '无咖啡因' }, { id: 'cold', name: '冷萃手冲' }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const products = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 1, name: '美式咖啡', en: 'Americano', price: 18, category: 'espresso', emoji: '☕', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 2, name: '拿铁', en: 'Caffè Latte', price: 24, category: 'espresso', emoji: '🥛', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4','生椰乳 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 3, name: '澳白', en: 'Flat White', price: 26, category: 'espresso', emoji: '🤎', options: [{name: '温度', choices:['热','冰']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 4, name: '生椰拿铁', en: 'Coconut Latte', price: 28, category: 'special', emoji: '🥥', options: [{name: '温度', choices:['冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 5, name: '燕麦拿铁', en: 'Oat Latte', price: 28, category: 'special', emoji: '🌾', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 6, name: '冷萃咖啡', en: 'Cold Brew', price: 26, category: 'cold', emoji: '🧊', options: [{name: '规格', choices:['标准杯','加大 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 7, name: '手冲单品', en: 'Pour Over', price: 32, category: 'cold', emoji: '🫖', options: [{name: '豆子', choices:['埃塞俄比亚','哥伦比亚','肯尼亚']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 8, name: '热巧克力', en: 'Hot Chocolate', price: 22, category: 'nocaffeine', emoji: '🍫', options: [{name: '温度', choices:['热']}, {name:'奶油', choices:['不加奶油','加奶油']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 9, name: '抹茶拿铁', en: 'Matcha Latte', price: 26, category: 'nocaffeine', emoji: '🍵', options: [{name: '温度', choices:['热','冰']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4']}] },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 10, name: '气泡美式', en: 'Sparkling Americano', price: 24, category: 'special', emoji: '🫧', options: [{name: '口味', choices:['原味','柠檬 +¥2']}] }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>async function loadConfig() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!supabase) return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const { data, error } = await supabase.from('config').select('*').limit(1).single();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (data) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>shopConfig = data;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('shop-name').textContent = data.shop_name || '移动咖啡车';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('shop-notice').textContent = data.shop_notice || '新鲜烘焙 · 现场制作';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (data.wechat_qrcode) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('wechat-img').src = data.wechat_qrcode;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('wechat-img').classList.remove('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('wechat-ph').classList.add('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (data.alipay_qrcode) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('alipay-img').src = data.alipay_qrcode;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('alipay-img').classList.remove('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById('alipay-ph').classList.add('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function showView(id) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.view-section').forEach(el =&gt; el.classList.add('hidden'));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(id).classList.remove('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.nav-btn').forEach(btn =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>btn.classList.toggle('text-stone-800', btn.dataset.view === id);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>btn.classList.toggle('text-stone-400', btn.dataset.view !== id);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (id === 'view-orders') renderMyOrders();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function renderCategories() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('category-tabs').innerHTML = categories.map(cat =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="setCategory('${cat.id}')" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${currentCategory === cat.id ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'}"&gt;${cat.name}&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`).join('');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function setCategory(id) { currentCategory = id; renderCategories(); renderMenu(); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function renderMenu() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const filtered = currentCategory === 'all' ? products : products.filter(p =&gt; p.category === currentCategory);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('menu-list').innerHTML = filtered.map(p =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-4 flex gap-4 shadow-sm press-scale cursor-pointer" onclick="openOpt(${p.id})"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="w-20 h-20 bg-stone-100 rounded-xl flex items-center justify-center text-3xl flex-shrink-0"&gt;${p.emoji}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex-1 flex flex-col justify-between py-0.5"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div&gt;&lt;h3 class="font-bold text-stone-800 text-base"&gt;${p.name}&lt;/h3&gt;&lt;p class="text-xs text-stone-400 mt-0.5"&gt;${p.en}&lt;/p&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-end"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-lg font-bold text-stone-800"&gt;¥${p.price}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="w-8 h-8 bg-stone-800 text-white rounded-full flex items-center justify-center shadow-md"&gt;&lt;svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`).join('');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function openOpt(pid) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const p = products.find(x =&gt; x.id === pid);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>selectedProduct = p; optionQty = 1; selectedOptions = {};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('opt-name').textContent = p.name;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('opt-price').textContent = `¥${p.price}`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('opt-qty').textContent = '1';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('opt-groups').innerHTML = p.options.map(opt =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>selectedOptions[opt.name] = opt.choices[0];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return `&lt;div&gt;&lt;label class="block text-sm font-medium text-stone-700 mb-2"&gt;${opt.name}&lt;/label&gt;&lt;div class="flex flex-wrap gap-2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>${opt.choices.map((c, i) =&gt; `&lt;button onclick="selOpt('${opt.name}','${c}',this)" class="opt-btn px-4 py-2 rounded-lg text-sm border transition-all ${i===0?'border-stone-800 bg-stone-800 text-white':'border-stone-200 text-stone-600 bg-white'}"&gt;${c}&lt;/button&gt;`).join('')}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;&lt;/div&gt;`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}).join('');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('option-modal').classList.remove('hidden');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function selOpt(name, val, btn) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>selectedOptions[name] = val;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const p = btn.parentElement;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>p.querySelectorAll('.opt-btn').forEach(b =&gt; { b.className = 'opt-btn px-4 py-2 rounded-lg text-sm border border-stone-200 text-stone-600 bg-white transition-all'; });</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>btn.className = 'opt-btn px-4 py-2 rounded-lg text-sm border border-stone-800 bg-stone-800 text-white transition-all';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function changeQty(d) { optionQty = Math.max(1, optionQty + d); document.getElementById('opt-qty').textContent = optionQty; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function closeOpt() { document.getElementById('option-modal').classList.add('hidden'); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function addToCart() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const p = selectedProduct;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let extra = 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const opts = Object.entries(selectedOptions).map(([n, v]) =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const m = v.match(/\+¥(\d+)/); if (m) extra += parseInt(m[1]);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return `${n}:${v}`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cart.push({ id: Date.now(), name: p.name, emoji: p.emoji, unitPrice: p.price + extra, qty: optionQty, optionsText: opts.join(' | ') });</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>updateCartUI(); closeOpt();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const fab = document.getElementById('cart-fab'); fab.classList.add('scale-110'); setTimeout(() =&gt; fab.classList.remove('scale-110'), 200);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function updateCartUI() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const qty = cart.reduce((s, i) =&gt; s + i.qty, 0);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const total = cart.reduce((s, i) =&gt; s + i.unitPrice * i.qty, 0);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('cart-badge').textContent = qty;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('cart-fab').classList.toggle('hidden', qty === 0);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('cart-subtotal').textContent = `¥${total}`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('cart-total-btn').textContent = `¥${total}`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('cart-items').innerHTML = cart.length ? cart.map((it, idx) =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex gap-3 items-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-xl"&gt;${it.emoji}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex-1 min-w-0"&gt;&lt;h4 class="font-medium text-stone-800 text-sm truncate"&gt;${it.name}&lt;/h4&gt;&lt;p class="text-xs text-stone-400 truncate"&gt;${it.optionsText}&lt;/p&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="text-right"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p class="font-bold text-stone-800"&gt;¥${it.unitPrice * it.qty}&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center gap-2 mt-1"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updQty(${idx},-1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs press-scale"&gt;−&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-sm w-4 text-center"&gt;${it.qty}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updQty(${idx},1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs press-scale"&gt;+&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`).join('') : '&lt;div class="text-center py-8 text-stone-400"&gt;购物车是空的&lt;/div&gt;';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function updQty(i, d) { cart[i].qty += d; if (cart[i].qty &lt;= 0) cart.splice(i, 1); updateCartUI(); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function clearCart() { cart = []; updateCartUI(); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function clearCartLocal() { cart = []; updateCartUI(); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function goToPay() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!cart.length) return;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('pay-amount').textContent = `¥${cart.reduce((s, i) =&gt; s + i.unitPrice * i.qty, 0)}`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>toggleCart(); showView('view-pay');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>async function completeOrder() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!supabase) { alert('数据库未配置，请检查 SUPABASE_KEY'); return; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const total = cart.reduce((s, i) =&gt; s + i.unitPrice * i.qty, 0);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const num = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const order = {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>num, items: cart.map(i =&gt; ({ name: i.name, emoji: i.emoji, qty: i.qty, unitPrice: i.unitPrice, optionsText: i.optionsText })),</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>total, status: 'pending',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>created_at: new Date().toISOString()</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const { error } = await supabase.from('orders').insert([order]);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (error) { alert('提交失败：' + error.message + '（请检查数据库表和RLS设置）'); return; }</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let myOrders = JSON.parse(localStorage.getItem('coffee_my_orders_v3') || '[]');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>myOrders.unshift({ ...order, time: new Date().toLocaleString('zh-CN', {hour:'2-digit', minute:'2-digit'}) });</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('coffee_my_orders_v3', JSON.stringify(myOrders));</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('done-num').textContent = num;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('done-details').innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-3 mb-2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>${cart.map(it =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center gap-3"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-2xl"&gt;${it.emoji}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="flex-1"&gt;&lt;p class="font-bold text-stone-800"&gt;${it.name}&lt;/p&gt;&lt;p class="text-xs text-stone-400"&gt;${it.optionsText}&lt;/p&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="font-bold text-stone-800"&gt;x${it.qty}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>`).join('')}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="border-t-2 border-stone-200 pt-3 mt-3 flex justify-between items-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span class="text-sm text-stone-500"&gt;合计&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span class="text-2xl font-black text-stone-800"&gt;¥${total}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>cart = []; updateCartUI(); showView('view-done');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function renderMyOrders() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const el = document.getElementById('orders-list');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const myOrders = JSON.parse(localStorage.getItem('coffee_my_orders_v3') || '[]');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!myOrders.length) { el.innerHTML = '&lt;div class="text-center py-20 text-stone-400"&gt;&lt;div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"&gt;📝&lt;/div&gt;&lt;p&gt;暂无订单&lt;/p&gt;&lt;/div&gt;'; return; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>el.innerHTML = myOrders.map(o =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl p-5 shadow-sm"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-start mb-3"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div&gt;&lt;span class="inline-block px-2 py-1 bg-stone-800 text-white text-xs rounded-lg font-bold mr-2"&gt;#${o.num}&lt;/span&gt;&lt;span class="text-xs text-stone-400"&gt;${o.time || ''}&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-2 mb-3"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>${o.items.map(it =&gt; `&lt;div class="flex justify-between text-sm"&gt;&lt;span class="text-stone-600"&gt;${it.emoji} ${it.name} x${it.qty}&lt;/span&gt;&lt;span class="font-medium"&gt;¥${it.unitPrice * it.qty}&lt;/span&gt;&lt;/div&gt;`).join('')}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="border-t border-stone-100 pt-3 flex justify-between items-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-sm text-stone-500"&gt;共 ${o.items.reduce((s,i)=&gt;s+i.qty,0)} 件&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="font-bold text-stone-800"&gt;合计 ¥${o.total}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`).join('');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>loadConfig();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>renderCategories(); renderMenu(); updateCartUI();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+<body class="antialiased max-w-md mx-auto min-h-screen relative bg-stone-50 shadow-2xl overflow-hidden">
+    <div id="app" class="h-screen overflow-y-auto pb-20 hide-scrollbar">
+        <div id="view-menu" class="view-section fade-in">
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
+                <div class="mb-4">
+                    <h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight">移动咖啡车</h1>
+                    <p id="shop-notice" class="text-xs text-stone-500 mt-1">新鲜烘焙 · 现场制作</p>
+                </div>
+                <div class="flex space-x-3 overflow-x-auto hide-scrollbar" id="category-tabs"></div>
+            </div>
+            <div class="px-4 py-4 space-y-3" id="menu-list"></div>
+        </div>
+        <div id="view-pay" class="view-section hidden fade-in bg-stone-100 min-h-screen">
+            <div class="bg-white px-6 pt-8 pb-6 text-center relative">
+                <button onclick="showView('view-menu')" class="absolute left-4 top-8 p-2 text-stone-500 press-scale rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 class="text-xl font-bold text-stone-800">向商家付款</h2>
+                <div class="mt-6 mb-2"><span class="text-4xl font-bold text-stone-800" id="pay-amount">¥0</span></div>
+                <p class="text-stone-500 text-sm">请使用微信或支付宝扫描下方二维码</p>
+            </div>
+            <div class="px-6 py-8 space-y-6">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+                    <div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                        <img id="wechat-img" class="w-full h-full object-cover hidden" />
+                        <div id="wechat-ph" class="text-stone-400 text-sm">加载中...</div>
+                    </div>
+                    <p class="font-medium text-stone-700">微信收款码</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+                    <div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
+                        <img id="alipay-img" class="w-full h-full object-cover hidden" />
+                        <div id="alipay-ph" class="text-stone-400 text-sm">加载中...</div>
+                    </div>
+                    <p class="font-medium text-stone-700">支付宝收款码</p>
+                </div>
+                <button onclick="completeOrder()" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium text-lg press-scale transition-transform">我已完成付款</button>
+            </div>
+        </div>
+        <div id="view-done" class="view-section hidden fade-in bg-stone-100 min-h-screen">
+            <div class="bg-white px-6 pt-8 pb-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-xl font-bold text-stone-800">订单已提交</h2>
+                <p class="text-stone-500 text-sm mt-1">商家已收到，请留意叫号</p>
+            </div>
+            <div class="px-6 py-4 space-y-4">
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-8 text-center">
+                    <p class="text-sm text-amber-700 mb-2 font-medium tracking-widest">取 餐 号</p>
+                    <p class="text-7xl font-black text-amber-800 tracking-wider" id="done-num">000</p>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm" id="done-details"></div>
+                <button onclick="showView('view-menu'); clearCartLocal();" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium press-scale transition-transform">完成，返回继续点单</button>
+            </div>
+        </div>
+        <div id="view-orders" class="view-section hidden fade-in">
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
+                <h1 class="text-2xl font-bold text-stone-800">当前订单</h1>
+                <p class="text-xs text-stone-400 mt-1">仅本设备可见</p>
+            </div>
+            <div class="px-4 py-4 space-y-3" id="orders-list"></div>
+        </div>
+        <div id="cart-modal" class="fixed inset-0 bg-black/40 z-40 hidden flex flex-col justify-end" onclick="if(event.target===this)toggleCart()">
+            <div class="bg-white rounded-t-3xl max-h-[70vh] flex flex-col slide-up" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-center p-5 border-b border-stone-100">
+                    <h3 class="font-bold text-lg text-stone-800">已选商品</h3>
+                    <button onclick="clearCart()" class="text-stone-400 text-sm flex items-center gap-1 press-scale">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>清空
+                    </button>
+                </div>
+                <div class="overflow-y-auto p-5 space-y-4 flex-1" id="cart-items"></div>
+                <div class="p-5 border-t border-stone-100 bg-stone-50 rounded-t-3xl">
+                    <div class="flex justify-between text-sm text-stone-500 mb-3"><span>商品小计</span><span id="cart-subtotal">¥0</span></div>
+                    <button onclick="goToPay()" class="w-full py-3.5 bg-stone-800 text-white rounded-2xl font-medium text-lg press-scale transition-transform">去支付 <span id="cart-total-btn">¥0</span></button>
+                </div>
+            </div>
+        </div>
+        <div id="option-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex flex-col justify-end">
+            <div class="bg-white rounded-t-3xl p-6 slide-up max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-start mb-4">
+                    <div><h3 id="opt-name" class="text-xl font-bold text-stone-800"></h3><p id="opt-price" class="text-lg font-semibold text-stone-600 mt-1"></p></div>
+                    <button onclick="closeOpt()" class="p-2 bg-stone-100 rounded-full text-stone-500 press-scale"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                <div class="space-y-4" id="opt-groups"></div>
+                <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between">
+                    <div class="flex items-center bg-stone-100 rounded-full">
+                        <button onclick="changeQty(-1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg press-scale">−</button>
+                        <span id="opt-qty" class="w-8 text-center font-medium">1</span>
+                        <button onclick="changeQty(1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg press-scale">+</button>
+                    </div>
+                    <button onclick="addToCart()" class="px-8 py-3 bg-stone-800 text-white rounded-full font-medium press-scale transition-transform">加入购物车</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-100 px-6 py-3 flex justify-around items-center z-30 max-w-md mx-auto">
+        <button onclick="showView('view-menu')" class="nav-btn flex flex-col items-center gap-1 text-stone-800" data-view="view-menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-[10px] font-medium">点单</span>
+        </button>
+        <button onclick="showView('view-orders')" class="nav-btn flex flex-col items-center gap-1 text-stone-400" data-view="view-orders">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            <span class="text-[10px] font-medium">当前订单</span>
+        </button>
+    </div>
+    <button onclick="toggleCart()" id="cart-fab" class="fixed bottom-20 right-4 w-14 h-14 bg-stone-800 text-white rounded-full shadow-lg flex items-center justify-center z-30 press-scale transition-transform hidden">
+        <div class="relative">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span id="cart-badge" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">0</span>
+        </div>
+    </button>
+    <script>
+        const SUPABASE_URL = 'https://woasvhpfiytpkqzsekkz.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oIlP3NdbrOII7b_W3U4JpA_nYGEhejE'; // 从 Supabase 控制台 API Keys 页面复制完整的 Publishable key
+
+        let supabase = null;
+        if (!SUPABASE_KEY.includes('...')) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        let shopConfig = {};
+        let cart = [];
+        let selectedProduct = null;
+        let optionQty = 1;
+        let selectedOptions = {};
+        let currentCategory = 'all';
+
+        const categories = [
+            { id: 'all', name: '全部' }, { id: 'espresso', name: '意式经典' }, { id: 'special', name: '创意特调' },
+            { id: 'nocaffeine', name: '无咖啡因' }, { id: 'cold', name: '冷萃手冲' }
+        ];
+        const products = [
+            { id: 1, name: '美式咖啡', en: 'Americano', price: 18, category: 'espresso', emoji: '☕', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 2, name: '拿铁', en: 'Caffè Latte', price: 24, category: 'espresso', emoji: '🥛', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4','生椰乳 +¥4']}] },
+            { id: 3, name: '澳白', en: 'Flat White', price: 26, category: 'espresso', emoji: '🤎', options: [{name: '温度', choices:['热','冰']}] },
+            { id: 4, name: '生椰拿铁', en: 'Coconut Latte', price: 28, category: 'special', emoji: '🥥', options: [{name: '温度', choices:['冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 5, name: '燕麦拿铁', en: 'Oat Latte', price: 28, category: 'special', emoji: '🌾', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 6, name: '冷萃咖啡', en: 'Cold Brew', price: 26, category: 'cold', emoji: '🧊', options: [{name: '规格', choices:['标准杯','加大 +¥4']}] },
+            { id: 7, name: '手冲单品', en: 'Pour Over', price: 32, category: 'cold', emoji: '🫖', options: [{name: '豆子', choices:['埃塞俄比亚','哥伦比亚','肯尼亚']}] },
+            { id: 8, name: '热巧克力', en: 'Hot Chocolate', price: 22, category: 'nocaffeine', emoji: '🍫', options: [{name: '温度', choices:['热']}, {name:'奶油', choices:['不加奶油','加奶油']}] },
+            { id: 9, name: '抹茶拿铁', en: 'Matcha Latte', price: 26, category: 'nocaffeine', emoji: '🍵', options: [{name: '温度', choices:['热','冰']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4']}] },
+            { id: 10, name: '气泡美式', en: 'Sparkling Americano', price: 24, category: 'special', emoji: '🫧', options: [{name: '口味', choices:['原味','柠檬 +¥2']}] }
+        ];
+
+        async function loadConfig() {
+            if (!supabase) return;
+            const { data, error } = await supabase.from('config').select('*').limit(1).single();
+            if (data) {
+                shopConfig = data;
+                document.getElementById('shop-name').textContent = data.shop_name || '移动咖啡车';
+                document.getElementById('shop-notice').textContent = data.shop_notice || '新鲜烘焙 · 现场制作';
+                if (data.wechat_qrcode) {
+                    document.getElementById('wechat-img').src = data.wechat_qrcode;
+                    document.getElementById('wechat-img').classList.remove('hidden');
+                    document.getElementById('wechat-ph').classList.add('hidden');
+                }
+                if (data.alipay_qrcode) {
+                    document.getElementById('alipay-img').src = data.alipay_qrcode;
+                    document.getElementById('alipay-img').classList.remove('hidden');
+                    document.getElementById('alipay-ph').classList.add('hidden');
+                }
+            }
+        }
+
+        function showView(id) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('text-stone-800', btn.dataset.view === id);
+                btn.classList.toggle('text-stone-400', btn.dataset.view !== id);
+            });
+            if (id === 'view-orders') renderMyOrders();
+        }
+
+        function renderCategories() {
+            document.getElementById('category-tabs').innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat.id}')" class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${currentCategory === cat.id ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'}">${cat.name}</button>
+            `).join('');
+        }
+
+        function setCategory(id) { currentCategory = id; renderCategories(); renderMenu(); }
+
+        function renderMenu() {
+            const filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
+            document.getElementById('menu-list').innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl p-4 flex gap-4 shadow-sm press-scale cursor-pointer" onclick="openOpt(${p.id})">
+                    <div class="w-20 h-20 bg-stone-100 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">${p.emoji}</div>
+                    <div class="flex-1 flex flex-col justify-between py-0.5">
+                        <div><h3 class="font-bold text-stone-800 text-base">${p.name}</h3><p class="text-xs text-stone-400 mt-0.5">${p.en}</p></div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-lg font-bold text-stone-800">¥${p.price}</span>
+                            <div class="w-8 h-8 bg-stone-800 text-white rounded-full flex items-center justify-center shadow-md"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openOpt(pid) {
+            const p = products.find(x => x.id === pid);
+            selectedProduct = p; optionQty = 1; selectedOptions = {};
+            document.getElementById('opt-name').textContent = p.name;
+            document.getElementById('opt-price').textContent = `¥${p.price}`;
+            document.getElementById('opt-qty').textContent = '1';
+            document.getElementById('opt-groups').innerHTML = p.options.map(opt => {
+                selectedOptions[opt.name] = opt.choices[0];
+                return `<div><label class="block text-sm font-medium text-stone-700 mb-2">${opt.name}</label><div class="flex flex-wrap gap-2">
+                    ${opt.choices.map((c, i) => `<button onclick="selOpt('${opt.name}','${c}',this)" class="opt-btn px-4 py-2 rounded-lg text-sm border transition-all ${i===0?'border-stone-800 bg-stone-800 text-white':'border-stone-200 text-stone-600 bg-white'}">${c}</button>`).join('')}
+                </div></div>`;
+            }).join('');
+            document.getElementById('option-modal').classList.remove('hidden');
+        }
+
+        function selOpt(name, val, btn) {
+            selectedOptions[name] = val;
+            const p = btn.parentElement;
+            p.querySelectorAll('.opt-btn').forEach(b => { b.className = 'opt-btn px-4 py-2 rounded-lg text-sm border border-stone-200 text-stone-600 bg-white transition-all'; });
+            btn.className = 'opt-btn px-4 py-2 rounded-lg text-sm border border-stone-800 bg-stone-800 text-white transition-all';
+        }
+
+        function changeQty(d) { optionQty = Math.max(1, optionQty + d); document.getElementById('opt-qty').textContent = optionQty; }
+
+        function closeOpt() { document.getElementById('option-modal').classList.add('hidden'); }
+
+        function addToCart() {
+            const p = selectedProduct;
+            let extra = 0;
+            const opts = Object.entries(selectedOptions).map(([n, v]) => {
+                const m = v.match(/\+¥(\d+)/); if (m) extra += parseInt(m[1]);
+                return `${n}:${v}`;
+            });
+            cart.push({ id: Date.now(), name: p.name, emoji: p.emoji, unitPrice: p.price + extra, qty: optionQty, optionsText: opts.join(' | ') });
+            updateCartUI(); closeOpt();
+            const fab = document.getElementById('cart-fab'); fab.classList.add('scale-110'); setTimeout(() => fab.classList.remove('scale-110'), 200);
+        }
+
+        function updateCartUI() {
+            const qty = cart.reduce((s, i) => s + i.qty, 0);
+            const total = cart.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+            document.getElementById('cart-badge').textContent = qty;
+            document.getElementById('cart-fab').classList.toggle('hidden', qty === 0);
+            document.getElementById('cart-subtotal').textContent = `¥${total}`;
+            document.getElementById('cart-total-btn').textContent = `¥${total}`;
+            document.getElementById('cart-items').innerHTML = cart.length ? cart.map((it, idx) => `
+                <div class="flex gap-3 items-center">
+                    <div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-xl">${it.emoji}</div>
+                    <div class="flex-1 min-w-0"><h4 class="font-medium text-stone-800 text-sm truncate">${it.name}</h4><p class="text-xs text-stone-400 truncate">${it.optionsText}</p></div>
+                    <div class="text-right">
+                        <p class="font-bold text-stone-800">¥${it.unitPrice * it.qty}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button onclick="updQty(${idx},-1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs press-scale">−</button>
+                            <span class="text-sm w-4 text-center">${it.qty}</span>
+                            <button onclick="updQty(${idx},1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs press-scale">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-center py-8 text-stone-400">购物车是空的</div>';
+        }
+
+        function updQty(i, d) { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); updateCartUI(); }
+
+        function clearCart() { cart = []; updateCartUI(); }
+
+        function clearCartLocal() { cart = []; updateCartUI(); }
+
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
+
+        function goToPay() {
+            if (!cart.length) return;
+            document.getElementById('pay-amount').textContent = `¥${cart.reduce((s, i) => s + i.unitPrice * i.qty, 0)}`;
+            toggleCart(); showView('view-pay');
+        }
+
+        async function completeOrder() {
+            if (!supabase) { alert('数据库未配置，请检查 SUPABASE_KEY'); return; }
+            const total = cart.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+            const num = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
+            const order = {
+                num, items: cart.map(i => ({ name: i.name, emoji: i.emoji, qty: i.qty, unitPrice: i.unitPrice, optionsText: i.optionsText })),
+                total, status: 'pending',
+                created_at: new Date().toISOString()
+            };
+            const { error } = await supabase.from('orders').insert([order]);
+            if (error) { alert('提交失败：' + error.message + '（请检查数据库表和RLS设置）'); return; }
+            
+            let myOrders = JSON.parse(localStorage.getItem('coffee_my_orders_v3') || '[]');
+            myOrders.unshift({ ...order, time: new Date().toLocaleString('zh-CN', {hour:'2-digit', minute:'2-digit'}) });
+            localStorage.setItem('coffee_my_orders_v3', JSON.stringify(myOrders));
+            
+            document.getElementById('done-num').textContent = num;
+            document.getElementById('done-details').innerHTML = `
+                <div class="space-y-3 mb-2">
+                    ${cart.map(it => `
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${it.emoji}</span>
+                            <div class="flex-1"><p class="font-bold text-stone-800">${it.name}</p><p class="text-xs text-stone-400">${it.optionsText}</p></div>
+                            <span class="font-bold text-stone-800">x${it.qty}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="border-t-2 border-stone-200 pt-3 mt-3 flex justify-between items-center">
+                    <span class="text-sm text-stone-500">合计</span>
+                    <span class="text-2xl font-black text-stone-800">¥${total}</span>
+                </div>
+            `;
+            cart = []; updateCartUI(); showView('view-done');
+        }
+
+        function renderMyOrders() {
+            const el = document.getElementById('orders-list');
+            const myOrders = JSON.parse(localStorage.getItem('coffee_my_orders_v3') || '[]');
+            if (!myOrders.length) { el.innerHTML = '<div class="text-center py-20 text-stone-400"><div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📝</div><p>暂无订单</p></div>'; return; }
+            el.innerHTML = myOrders.map(o => `
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div><span class="inline-block px-2 py-1 bg-stone-800 text-white text-xs rounded-lg font-bold mr-2">#${o.num}</span><span class="text-xs text-stone-400">${o.time || ''}</span></div>
+                    </div>
+                    <div class="space-y-2 mb-3">
+                        ${o.items.map(it => `<div class="flex justify-between text-sm"><span class="text-stone-600">${it.emoji} ${it.name} x${it.qty}</span><span class="font-medium">¥${it.unitPrice * it.qty}</span></div>`).join('')}
+                    </div>
+                    <div class="border-t border-stone-100 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-stone-500">共 ${o.items.reduce((s,i)=>s+i.qty,0)} 件</span>
+                        <span class="font-bold text-stone-800">合计 ¥${o.total}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        loadConfig();
+        renderCategories(); renderMenu(); updateCartUI();
+    </script>
 </body>
 </html>
