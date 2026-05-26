@@ -7,9 +7,9 @@
   <meta name="Generator" content="Cocoa HTML Writer">
   <meta name="CocoaVersion" content="2575.7">
   <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; color: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; color: #000000; min-height: 13.0px}
-    span.s1 {font-variant-ligatures: no-common-ligatures}
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Menlo; -webkit-text-stroke: #000000; min-height: 13.0px}
+    span.s1 {font-kerning: none; font-variant-ligatures: common-ligatures}
   </style>
 </head>
 <body>
@@ -34,20 +34,16 @@
 <p class="p1"><span class="s1">&lt;/head&gt;</span></p>
 <p class="p1"><span class="s1">&lt;body class="antialiased max-w-md mx-auto min-h-screen relative bg-stone-50 shadow-2xl overflow-hidden"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="app" class="h-screen overflow-y-auto pb-20 hide-scrollbar"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 菜单页 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-menu" class="view-section fade-in"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mb-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight"&gt;连接中...&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p id="shop-notice" class="text-xs text-stone-500 mt-1"&gt;--&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight"&gt;移动咖啡车&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p id="shop-notice" class="text-xs text-stone-500 mt-1"&gt;新鲜烘焙 · 现场制作&lt;/p&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex space-x-3 overflow-x-auto hide-scrollbar" id="category-tabs"&gt;&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-4 py-4 space-y-3" id="menu-list"&gt;&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 支付页 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-pay" class="view-section hidden fade-in bg-stone-100 min-h-screen"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white px-6 pt-8 pb-6 text-center relative"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="showView('view-menu')" class="absolute left-4 top-8 p-2 text-stone-500 press-scale rounded-full"&gt;</span></p>
@@ -75,8 +71,6 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="completeOrder()" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium text-lg press-scale transition-transform"&gt;我已完成付款&lt;/button&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 完成页 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-done" class="view-section hidden fade-in bg-stone-100 min-h-screen"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white px-6 pt-8 pb-6 text-center"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"&gt;</span></p>
@@ -94,8 +88,6 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="showView('view-menu'); clearCartLocal();" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium press-scale transition-transform"&gt;完成，返回继续点单&lt;/button&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 我的订单 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="view-orders" class="view-section hidden fade-in"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-2xl font-bold text-stone-800"&gt;当前订单&lt;/h1&gt;</span></p>
@@ -103,8 +95,6 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="px-4 py-4 space-y-3" id="orders-list"&gt;&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 购物车弹窗 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="cart-modal" class="fixed inset-0 bg-black/40 z-40 hidden flex flex-col justify-end" onclick="if(event.target===this)toggleCart()"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-t-3xl max-h-[70vh] flex flex-col slide-up" onclick="event.stopPropagation()"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center p-5 border-b border-stone-100"&gt;</span></p>
@@ -120,8 +110,6 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 规格弹窗 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="option-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex flex-col justify-end"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-t-3xl p-6 slide-up max-h-[80vh] overflow-y-auto"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-start mb-4"&gt;</span></p>
@@ -140,8 +128,6 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 底部导航 --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-100 px-6 py-3 flex justify-around items-center z-30 max-w-md mx-auto"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="showView('view-menu')" class="nav-btn flex flex-col items-center gap-1 text-stone-800" data-view="view-menu"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
@@ -152,19 +138,15 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span class="text-[10px] font-medium"&gt;当前订单&lt;/span&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button onclick="toggleCart()" id="cart-fab" class="fixed bottom-20 right-4 w-14 h-14 bg-stone-800 text-white rounded-full shadow-lg flex items-center justify-center z-30 press-scale transition-transform hidden"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="relative"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span id="cart-badge" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold"&gt;0&lt;/span&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/button&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// ==================== 配置区：填入您的 Supabase 信息 ====================</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const SUPABASE_URL = 'https://woasvhpfiytpkqzsekkz.supabase.co';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const SUPABASE_KEY = 'sb_publishable_oIlP3NdbrOII7b_W3U4JpA_nYGEhejE'; // 从 Supabase 控制台 API Keys 页面复制完整的 Publishable key</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// =====================================================================</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const SUPABASE_KEY = 'sb_publishable_oILP3NdbrOII7b_W3U4JpA_nYGEh...'; // 从 Supabase 控制台 API Keys 页面复制完整的 Publishable key</span></p>
 <p class="p2"><span class="s1"></span><br></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let supabase = null;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (!SUPABASE_KEY.includes('...')) {</span></p>
@@ -330,7 +312,8 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const num = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const order = {</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>num, items: cart.map(i =&gt; ({ name: i.name, emoji: i.emoji, qty: i.qty, unitPrice: i.unitPrice, optionsText: i.optionsText })),</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>total, status: 'pending'</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>total, status: 'pending',</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>created_at: new Date().toISOString()</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const { error } = await supabase.from('orders').insert([order]);</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (error) { alert('提交失败：' + error.message + '（请检查数据库表和RLS设置）'); return; }</span></p>
