@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>移动咖啡车</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #FAFAF9;
+            color: #1C1917;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased max-w-md mx-auto min-h-screen relative bg-stone-50 shadow-2xl overflow-hidden">
+
+    <!-- 视图容器 -->
+    <div id="app" class="h-screen overflow-y-auto pb-20 hide-scrollbar">
+
+        <!-- 1. 菜单页 -->
+        <div id="view-menu" class="view-section fade-in">
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h1 id="shop-name" class="text-2xl font-bold text-stone-800 tracking-tight">移动咖啡车</h1>
+                        <p id="shop-notice" class="text-xs text-stone-500 mt-1">新鲜烘焙 · 现场制作</p>
+                    </div>
+                    <button onclick="showView('view-admin')" class="p-2 bg-stone-100 rounded-full text-stone-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="flex space-x-3 overflow-x-auto hide-scrollbar" id="category-tabs"></div>
+            </div>
+            <div class="px-4 py-4 space-y-3" id="menu-list"></div>
+        </div>
+
+        <!-- 2. 购物车弹窗 -->
+        <div id="cart-modal" class="fixed inset-0 bg-black/40 z-40 hidden flex flex-col justify-end" onclick="if(event.target===this)toggleCart()">
+            <div class="bg-white rounded-t-3xl max-h-[70vh] flex flex-col slide-up" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-center p-5 border-b border-stone-100">
+                    <h3 class="font-bold text-lg text-stone-800">已选商品</h3>
+                    <button onclick="clearCart()" class="text-stone-400 text-sm flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        清空
+                    </button>
+                </div>
+                <div class="overflow-y-auto p-5 space-y-4 flex-1" id="cart-items"></div>
+                <div class="p-5 border-t border-stone-100 space-y-3 bg-stone-50 rounded-t-3xl">
+                    <div class="flex justify-between text-sm text-stone-500 mb-1">
+                        <span>商品小计</span>
+                        <span id="cart-subtotal">¥0</span>
+                    </div>
+                    <button onclick="goToPay()" class="w-full py-3.5 bg-stone-800 text-white rounded-2xl font-medium text-lg active:scale-[0.98] transition-transform">去支付 <span id="cart-total-btn">¥0</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 支付页 -->
+        <div id="view-pay" class="view-section hidden fade-in bg-stone-100 min-h-screen">
+            <div class="bg-white px-6 pt-8 pb-6 text-center relative">
+                <button onclick="showView('view-menu')" class="absolute left-4 top-8 p-2 text-stone-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 class="text-xl font-bold text-stone-800">向商家付款</h2>
+                <div class="mt-6 mb-2">
+                    <span class="text-4xl font-bold text-stone-800" id="pay-amount">¥0</span>
+                </div>
+                <p class="text-stone-500 text-sm">请使用微信或支付宝扫描下方二维码</p>
+            </div>
+            <div class="px-6 py-8 space-y-6">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+                    <div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden" id="wechat-qrcode-container">
+                        <img id="wechat-qrcode-img" class="w-full h-full object-cover hidden" />
+                        <div id="wechat-qrcode-placeholder" class="text-stone-400 text-sm">商家未上传微信收款码</div>
+                    </div>
+                    <p class="font-medium text-stone-700">微信收款码</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm">
+                    <div class="w-48 h-48 mx-auto bg-stone-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden" id="alipay-qrcode-container">
+                        <img id="alipay-qrcode-img" class="w-full h-full object-cover hidden" />
+                        <div id="alipay-qrcode-placeholder" class="text-stone-400 text-sm">商家未上传支付宝收款码</div>
+                    </div>
+                    <p class="font-medium text-stone-700">支付宝收款码</p>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+                    <p class="font-medium mb-1">付款完成后：</p>
+                    <p>请告知商家您的取餐号：<span class="font-bold text-lg" id="pickup-number">001</span></p>
+                </div>
+                <button onclick="completeOrder()" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium text-lg active:scale-[0.98] transition-transform">我已完成付款</button>
+            </div>
+        </div>
+
+        <!-- 4. 订单页 -->
+        <div id="view-orders" class="view-section hidden fade-in">
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-20 border-b border-stone-100">
+                <h1 class="text-2xl font-bold text-stone-800">我的订单</h1>
+            </div>
+            <div class="px-4 py-4 space-y-3" id="orders-list">
+                <div class="text-center py-20 text-stone-400">
+                    <p>暂无订单</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 商家设置页 -->
+        <div id="view-admin" class="view-section hidden fade-in bg-stone-100 min-h-screen">
+            <div class="bg-white px-6 pt-8 pb-6 sticky top-0 z-20 border-b border-stone-100 flex items-center gap-3">
+                <button onclick="showView('view-menu')" class="p-2 -ml-2 text-stone-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 class="text-xl font-bold text-stone-800">商家设置</h2>
+            </div>
+            <div class="px-4 py-6 space-y-4">
+                <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 class="font-bold text-stone-800 mb-2">店铺信息</h3>
+                    <div>
+                        <label class="block text-sm text-stone-500 mb-1">店铺名称</label>
+                        <input type="text" id="input-shop-name" class="w-full px-4 py-3 bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:border-stone-400 text-stone-800" placeholder="输入店铺名称">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-stone-500 mb-1">店铺公告</label>
+                        <input type="text" id="input-shop-notice" class="w-full px-4 py-3 bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:border-stone-400 text-stone-800" placeholder="输入公告，如：新鲜烘焙 现场制作">
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 class="font-bold text-stone-800 mb-2">收款码设置</h3>
+                    <div>
+                        <label class="block text-sm text-stone-500 mb-1">微信收款码</label>
+                        <div class="flex items-center gap-3">
+                            <div class="w-20 h-20 bg-stone-100 rounded-lg flex items-center justify-center overflow-hidden" id="preview-wechat">
+                                <span class="text-xs text-stone-400">未上传</span>
+                            </div>
+                            <label class="flex-1 px-4 py-3 bg-stone-800 text-white rounded-xl text-center text-sm font-medium active:scale-[0.98] transition-transform cursor-pointer">
+                                上传微信收款码
+                                <input type="file" accept="image/*" class="hidden" onchange="handleQrcodeUpload(this, 'wechat')">
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-stone-500 mb-1">支付宝收款码</label>
+                        <div class="flex items-center gap-3">
+                            <div class="w-20 h-20 bg-stone-100 rounded-lg flex items-center justify-center overflow-hidden" id="preview-alipay">
+                                <span class="text-xs text-stone-400">未上传</span>
+                            </div>
+                            <label class="flex-1 px-4 py-3 bg-stone-800 text-white rounded-xl text-center text-sm font-medium active:scale-[0.98] transition-transform cursor-pointer">
+                                上传支付宝收款码
+                                <input type="file" accept="image/*" class="hidden" onchange="handleQrcodeUpload(this, 'alipay')">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 class="font-bold text-stone-800 mb-2">车上点单二维码</h3>
+                    <p class="text-sm text-stone-500">生成二维码打印贴在车上，顾客扫码即可点单</p>
+                    <div>
+                        <label class="block text-sm text-stone-500 mb-1">点单链接（部署后的网页地址）</label>
+                        <input type="text" id="input-order-url" class="w-full px-4 py-3 bg-stone-50 rounded-xl border border-stone-200 focus:outline-none focus:border-stone-400 text-stone-800 text-sm mb-3" placeholder="https://your-domain.com/order">
+                        <button onclick="generateCarQr()" class="w-full py-3 bg-stone-800 text-white rounded-xl text-sm font-medium active:scale-[0.98] transition-transform">生成车上二维码</button>
+                    </div>
+                    <div id="car-qr-result" class="hidden pt-4 border-t border-stone-100">
+                        <div class="flex flex-col items-center">
+                            <div id="car-qrcode" class="mb-3"></div>
+                            <p class="text-sm text-stone-500 mb-4">截图保存后打印（建议尺寸10x10cm）</p>
+                            <button onclick="showView('view-qr-print')" class="px-6 py-2 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium">查看打印专用版</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" class="w-full py-4 bg-stone-800 text-white rounded-2xl font-medium text-lg active:scale-[0.98] transition-transform">保存设置</button>
+            </div>
+        </div>
+
+        <!-- 6. 打印专用二维码页 -->
+        <div id="view-qr-print" class="view-section hidden bg-white min-h-screen flex flex-col items-center justify-center p-8">
+            <button onclick="showView('view-admin')" class="absolute left-4 top-4 p-2 text-stone-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <div class="text-center space-y-6">
+                <div class="w-64 h-64 mx-auto bg-white p-2 border-2 border-stone-800 rounded-xl">
+                    <div id="print-qrcode-inner" class="w-full h-full"></div>
+                </div>
+                <div>
+                    <h2 id="print-shop-name" class="text-2xl font-bold text-stone-900 mb-2">移动咖啡车</h2>
+                    <p class="text-lg text-stone-600">微信扫码 · 立即点单</p>
+                </div>
+                <div class="pt-8 text-stone-400 text-sm">
+                    <p>建议打印尺寸：10cm × 12cm</p>
+                    <p>请使用防水贴纸材质</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 规格选择弹窗 -->
+        <div id="option-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex flex-col justify-end">
+            <div class="bg-white rounded-t-3xl p-6 slide-up max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 id="option-product-name" class="text-xl font-bold text-stone-800">商品名称</h3>
+                        <p id="option-product-price" class="text-lg font-semibold text-stone-600 mt-1">¥0</p>
+                    </div>
+                    <button onclick="closeOptionModal()" class="p-2 bg-stone-100 rounded-full text-stone-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="space-y-4" id="option-groups"></div>
+                <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between">
+                    <div class="flex items-center bg-stone-100 rounded-full">
+                        <button onclick="changeOptionQty(-1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg">−</button>
+                        <span id="option-qty" class="w-8 text-center font-medium text-stone-800">1</span>
+                        <button onclick="changeOptionQty(1)" class="w-10 h-10 flex items-center justify-center text-stone-600 font-bold text-lg">+</button>
+                    </div>
+                    <button onclick="confirmAddToCart()" class="px-8 py-3 bg-stone-800 text-white rounded-full font-medium active:scale-95 transition-transform">加入购物车</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-100 px-6 py-3 flex justify-around items-center z-30 max-w-md mx-auto">
+        <button onclick="showView('view-menu')" class="nav-btn flex flex-col items-center gap-1 text-stone-800" data-view="view-menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-[10px] font-medium">点单</span>
+        </button>
+        <button onclick="showView('view-orders')" class="nav-btn flex flex-col items-center gap-1 text-stone-400" data-view="view-orders">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            <span class="text-[10px] font-medium">订单</span>
+        </button>
+    </div>
+
+    <!-- 购物车悬浮按钮 -->
+    <button onclick="toggleCart()" id="cart-fab" class="fixed bottom-20 right-4 w-14 h-14 bg-stone-800 text-white rounded-full shadow-lg flex items-center justify-center z-30 active:scale-90 transition-transform hidden">
+        <div class="relative">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span id="cart-badge" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">0</span>
+        </div>
+    </button>
+
+    <script>
+        // ===== 数据 =====
+        const categories = [
+            { id: 'all', name: '全部' },
+            { id: 'espresso', name: '意式经典' },
+            { id: 'special', name: '创意特调' },
+            { id: 'nocaffeine', name: '无咖啡因' },
+            { id: 'cold', name: '冷萃手冲' }
+        ];
+
+        const products = [
+            { id: 1, name: '美式咖啡', en: 'Americano', price: 18, category: 'espresso', emoji: '☕', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 2, name: '拿铁', en: 'Caffè Latte', price: 24, category: 'espresso', emoji: '🥛', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4','生椰乳 +¥4']}] },
+            { id: 3, name: '澳白', en: 'Flat White', price: 26, category: 'espresso', emoji: '🤎', options: [{name: '温度', choices:['热','冰']}] },
+            { id: 4, name: '生椰拿铁', en: 'Coconut Latte', price: 28, category: 'special', emoji: '🥥', options: [{name: '温度', choices:['冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 5, name: '燕麦拿铁', en: 'Oat Latte', price: 28, category: 'special', emoji: '🌾', options: [{name: '温度', choices:['热','冰']}, {name:'规格', choices:['中杯','大杯 +¥4']}] },
+            { id: 6, name: '冷萃咖啡', en: 'Cold Brew', price: 26, category: 'cold', emoji: '🧊', options: [{name: '规格', choices:['标准杯','加大 +¥4']}] },
+            { id: 7, name: '手冲单品', en: 'Pour Over', price: 32, category: 'cold', emoji: '🫖', options: [{name: '豆子', choices:['埃塞俄比亚','哥伦比亚','肯尼亚']}] },
+            { id: 8, name: '热巧克力', en: 'Hot Chocolate', price: 22, category: 'nocaffeine', emoji: '🍫', options: [{name: '温度', choices:['热']}, {name:'奶油', choices:['不加奶油','加奶油']}] },
+            { id: 9, name: '抹茶拿铁', en: 'Matcha Latte', price: 26, category: 'nocaffeine', emoji: '🍵', options: [{name: '温度', choices:['热','冰']}, {name:'牛奶', choices:['全脂奶','燕麦奶 +¥4']}] },
+            { id: 10, name: '气泡美式', en: 'Sparkling Americano', price: 24, category: 'special', emoji: '🫧', options: [{name: '口味', choices:['原味','柠檬 +¥2']}] }
+        ];
+
+        // ===== 状态 =====
+        let state = {
+            cart: [],
+            orders: [],
+            settings: {
+                shopName: '移动咖啡车',
+                shopNotice: '新鲜烘焙 · 现场制作',
+                wechatQrcode: '',
+                alipayQrcode: '',
+                orderUrl: ''
+            },
+            currentCategory: 'all',
+            selectedProduct: null,
+            optionQty: 1,
+            selectedOptions: {}
+        };
+
+        // ===== 初始化 =====
+        function init() {
+            loadSettings();
+            renderCategories();
+            renderMenu();
+            updateCartUI();
+            renderOrders();
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('coffee_settings');
+            if (saved) {
+                state.settings = JSON.parse(saved);
+                document.getElementById('shop-name').textContent = state.settings.shopName;
+                document.getElementById('shop-notice').textContent = state.settings.shopNotice;
+                document.getElementById('input-shop-name').value = state.settings.shopName;
+                document.getElementById('input-shop-notice').value = state.settings.shopNotice;
+                document.getElementById('input-order-url').value = state.settings.orderUrl || '';
+                
+                if (state.settings.wechatQrcode) {
+                    document.getElementById('wechat-qrcode-img').src = state.settings.wechatQrcode;
+                    document.getElementById('wechat-qrcode-img').classList.remove('hidden');
+                    document.getElementById('wechat-qrcode-placeholder').classList.add('hidden');
+                    document.getElementById('preview-wechat').innerHTML = `<img src="${state.settings.wechatQrcode}" class="w-full h-full object-cover">`;
+                }
+                if (state.settings.alipayQrcode) {
+                    document.getElementById('alipay-qrcode-img').src = state.settings.alipayQrcode;
+                    document.getElementById('alipay-qrcode-img').classList.remove('hidden');
+                    document.getElementById('alipay-qrcode-placeholder').classList.add('hidden');
+                    document.getElementById('preview-alipay').innerHTML = `<img src="${state.settings.alipayQrcode}" class="w-full h-full object-cover">`;
+                }
+            }
+            const savedOrders = localStorage.getItem('coffee_orders');
+            if (savedOrders) state.orders = JSON.parse(savedOrders);
+        }
+
+        // ===== 视图切换 =====
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.view === viewId) {
+                    btn.classList.remove('text-stone-400');
+                    btn.classList.add('text-stone-800');
+                } else {
+                    btn.classList.add('text-stone-400');
+                    btn.classList.remove('text-stone-800');
+                }
+            });
+
+            if (viewId === 'view-orders') renderOrders();
+        }
+
+        // ===== 菜单渲染 =====
+        function renderCategories() {
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat.id}')" 
+                    class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${state.currentCategory === cat.id ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'}">
+                    ${cat.name}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(catId) {
+            state.currentCategory = catId;
+            renderCategories();
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-list');
+            const filtered = state.currentCategory === 'all' 
+                ? products 
+                : products.filter(p => p.category === state.currentCategory);
+            
+            container.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl p-4 flex gap-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openOptionModal(${p.id})">
+                    <div class="w-20 h-20 bg-stone-100 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">
+                        ${p.emoji}
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between py-0.5">
+                        <div>
+                            <h3 class="font-bold text-stone-800 text-base">${p.name}</h3>
+                            <p class="text-xs text-stone-400 mt-0.5">${p.en}</p>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-lg font-bold text-stone-800">¥${p.price}</span>
+                            <button class="w-8 h-8 bg-stone-800 text-white rounded-full flex items-center justify-center shadow-md active:scale-90 transition-transform">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== 规格弹窗 =====
+        function openOptionModal(productId) {
+            const product = products.find(p => p.id === productId);
+            state.selectedProduct = product;
+            state.optionQty = 1;
+            state.selectedOptions = {};
+            
+            document.getElementById('option-product-name').textContent = product.name;
+            document.getElementById('option-product-price').textContent = `¥${product.price}`;
+            document.getElementById('option-qty').textContent = '1';
+            
+            const container = document.getElementById('option-groups');
+            container.innerHTML = product.options.map((opt, idx) => {
+                state.selectedOptions[opt.name] = opt.choices[0];
+                return `
+                    <div>
+                        <label class="block text-sm font-medium text-stone-700 mb-2">${opt.name}</label>
+                        <div class="flex flex-wrap gap-2">
+                            ${opt.choices.map((choice, cidx) => `
+                                <button onclick="selectOption('${opt.name}', '${choice}', this)" 
+                                    class="opt-btn px-4 py-2 rounded-lg text-sm border transition-all ${cidx === 0 ? 'border-stone-800 bg-stone-800 text-white' : 'border-stone-200 text-stone-600 bg-white'}">
+                                    ${choice}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('option-modal').classList.remove('hidden');
+        }
+
+        function selectOption(optName, choice, btn) {
+            state.selectedOptions[optName] = choice;
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.opt-btn').forEach(b => {
+                b.classList.remove('border-stone-800', 'bg-stone-800', 'text-white');
+                b.classList.add('border-stone-200', 'text-stone-600', 'bg-white');
+            });
+            btn.classList.remove('border-stone-200', 'text-stone-600', 'bg-white');
+            btn.classList.add('border-stone-800', 'bg-stone-800', 'text-white');
+        }
+
+        function changeOptionQty(delta) {
+            state.optionQty = Math.max(1, state.optionQty + delta);
+            document.getElementById('option-qty').textContent = state.optionQty;
+        }
+
+        function closeOptionModal() {
+            document.getElementById('option-modal').classList.add('hidden');
+        }
+
+        function confirmAddToCart() {
+            const product = state.selectedProduct;
+            let extraPrice = 0;
+            const opts = Object.entries(state.selectedOptions).map(([name, val]) => {
+                if (val.includes('+¥')) {
+                    const match = val.match(/\+¥(\d+)/);
+                    if (match) extraPrice += parseInt(match[1]);
+                }
+                return `${name}:${val}`;
+            });
+            
+            const cartItem = {
+                id: Date.now(),
+                productId: product.id,
+                name: product.name,
+                emoji: product.emoji,
+                basePrice: product.price,
+                extraPrice: extraPrice,
+                unitPrice: product.price + extraPrice,
+                qty: state.optionQty,
+                options: opts,
+                optionsText: opts.join(' | ')
+            };
+            
+            state.cart.push(cartItem);
+            updateCartUI();
+            closeOptionModal();
+            
+            const fab = document.getElementById('cart-fab');
+            fab.classList.add('scale-110');
+            setTimeout(() => fab.classList.remove('scale-110'), 200);
+        }
+
+        // ===== 购物车 =====
+        function updateCartUI() {
+            const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = state.cart.reduce((sum, item) => sum + item.unitPrice * item.qty, 0);
+            
+            document.getElementById('cart-badge').textContent = totalQty;
+            document.getElementById('cart-fab').classList.toggle('hidden', totalQty === 0);
+            document.getElementById('cart-subtotal').textContent = `¥${totalPrice}`;
+            document.getElementById('cart-total-btn').textContent = `¥${totalPrice}`;
+            
+            const container = document.getElementById('cart-items');
+            if (state.cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-stone-400">购物车是空的</div>';
+            } else {
+                container.innerHTML = state.cart.map((item, idx) => `
+                    <div class="flex gap-3 items-center">
+                        <div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-xl flex-shrink-0">${item.emoji}</div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-medium text-stone-800 text-sm truncate">${item.name}</h4>
+                            <p class="text-xs text-stone-400 truncate">${item.optionsText}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-stone-800">¥${item.unitPrice * item.qty}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <button onclick="updateCartQty(${idx}, -1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs">−</button>
+                                <span class="text-sm w-4 text-center">${item.qty}</span>
+                                <button onclick="updateCartQty(${idx}, 1)" class="w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 text-xs">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateCartQty(idx, delta) {
+            state.cart[idx].qty += delta;
+            if (state.cart[idx].qty <= 0) state.cart.splice(idx, 1);
+            updateCartUI();
+        }
+
+        function clearCart() {
+            state.cart = [];
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // ===== 支付 =====
+        function goToPay() {
+            if (state.cart.length === 0) return;
+            const total = state.cart.reduce((sum, item) => sum + item.unitPrice * item.qty, 0);
+            document.getElementById('pay-amount').textContent = `¥${total}`;
+            
+            const orderNum = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
+            document.getElementById('pickup-number').textContent = orderNum;
+            state.pendingOrderNumber = orderNum;
+            
+            toggleCart();
+            showView('view-pay');
+        }
+
+        function completeOrder() {
+            const total = state.cart.reduce((sum, item) => sum + item.unitPrice * item.qty, 0);
+            const order = {
+                id: Date.now(),
+                number: state.pendingOrderNumber || '001',
+                items: [...state.cart],
+                total: total,
+                status: '制作中',
+                time: new Date().toLocaleString('zh-CN', {hour: '2-digit', minute:'2-digit'})
+            };
+            state.orders.unshift(order);
+            localStorage.setItem('coffee_orders', JSON.stringify(state.orders));
+            
+            state.cart = [];
+            updateCartUI();
+            alert(`订单已提交！取餐号：${order.number}`);
+            showView('view-orders');
+        }
+
+        // ===== 订单 =====
+        function renderOrders() {
+            const container = document.getElementById('orders-list');
+            if (state.orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20">
+                        <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📝</div>
+                        <p class="text-stone-400">暂无订单</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = state.orders.map(o => `
+                <div class="bg-white rounded-2xl p-5 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="inline-block px-2 py-1 bg-stone-800 text-white text-xs rounded-lg font-bold mr-2">#${o.number}</span>
+                            <span class="text-xs text-stone-400">${o.time}</span>
+                        </div>
+                        <span class="text-sm font-medium text-amber-600">${o.status}</span>
+                    </div>
+                    <div class="space-y-2 mb-3">
+                        ${o.items.map(item => `
+                            <div class="flex justify-between text-sm">
+                                <span class="text-stone-600">${item.emoji} ${item.name} x${item.qty}</span>
+                                <span class="text-stone-800 font-medium">¥${item.unitPrice * item.qty}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="border-t border-stone-100 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-stone-500">共 ${o.items.reduce((s,i)=>s+i.qty,0)} 件</span>
+                        <span class="font-bold text-stone-800">合计 ¥${o.total}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== 设置 =====
+        function handleQrcodeUpload(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                if (type === 'wechat') {
+                    state.settings.wechatQrcode = dataUrl;
+                    document.getElementById('preview-wechat').innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover">`;
+                } else {
+                    state.settings.alipayQrcode = dataUrl;
+                    document.getElementById('preview-alipay').innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover">`;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveSettings() {
+            state.settings.shopName = document.getElementById('input-shop-name').value || '移动咖啡车';
+            state.settings.shopNotice = document.getElementById('input-shop-notice').value || '新鲜烘焙 · 现场制作';
+            state.settings.orderUrl = document.getElementById('input-order-url').value || '';
+            
+            localStorage.setItem('coffee_settings', JSON.stringify(state.settings));
+            
+            document.getElementById('shop-name').textContent = state.settings.shopName;
+            document.getElementById('shop-notice').textContent = state.settings.shopNotice;
+            
+            if (state.settings.wechatQrcode) {
+                document.getElementById('wechat-qrcode-img').src = state.settings.wechatQrcode;
+                document.getElementById('wechat-qrcode-img').classList.remove('hidden');
+                document.getElementById('wechat-qrcode-placeholder').classList.add('hidden');
+            }
+            if (state.settings.alipayQrcode) {
+                document.getElementById('alipay-qrcode-img').src = state.settings.alipayQrcode;
+                document.getElementById('alipay-qrcode-img').classList.remove('hidden');
+                document.getElementById('alipay-qrcode-placeholder').classList.add('hidden');
+            }
+            
+            alert('设置已保存');
+            showView('view-menu');
+        }
+
+        // ===== 车上二维码 =====
+        function generateCarQr() {
+            const url = document.getElementById('input-order-url').value.trim();
+            if (!url) {
+                alert('请输入点单链接');
+                return;
+            }
+            
+            const container = document.getElementById('car-qrcode');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: url,
+                width: 200,
+                height: 200,
+                colorDark: '#1C1917',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            const printContainer = document.getElementById('print-qrcode-inner');
+            printContainer.innerHTML = '';
+            new QRCode(printContainer, {
+                text: url,
+                width: 240,
+                height: 240,
+                colorDark: '#000000',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            document.getElementById('print-shop-name').textContent = state.settings.shopName;
+            document.getElementById('car-qr-result').classList.remove('hidden');
+        }
+
+        init();
+    </script>
+</body>
+</html>
